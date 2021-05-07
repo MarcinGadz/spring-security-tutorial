@@ -11,12 +11,15 @@
 <p>User: <sec:authentication property="principal.username"/> </p>
 <p>Roles: <sec:authentication property="principal.authorities"/> </p>
 <hr/>
+<sec:authorize access="hasRole('MANAGER')">
+    <a href="${pageContext.request.contextPath}/leaders"><p>For leaders</p></a>
+</sec:authorize>
+<sec:authorize access="hasRole('ADMIN')">
+    <a href="${pageContext.request.contextPath}/systems"><p>For admins!</p></a>
+</sec:authorize>
+<hr/>
 <form:form action="${pageContext.request.contextPath}/logout" method="post">
     <input type="submit" value="Logout!"/>
 </form:form>
-<hr/>
-<a href="${pageContext.request.contextPath}/leaders"><p>For leaders</p></a>
-<a href="${pageContext.request.contextPath}/systems"><p>For admins!</p></a>
-<hr/>
 </body>
 </html>
