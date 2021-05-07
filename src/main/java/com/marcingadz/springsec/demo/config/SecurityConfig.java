@@ -16,14 +16,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         User.UserBuilder users = User.withDefaultPasswordEncoder();
         auth.inMemoryAuthentication()
                 .withUser(users.username("john").password("test").roles("EMPLOYEE"))
-                .withUser(users.username("jack").password("test").roles("MANAGER"))
-                .withUser(users.username("max").password("test").roles("ADMIN"));
+                .withUser(users.username("jack").password("test").roles("MANAGER", "EMPLOYEE"))
+                .withUser(users.username("max").password("test").roles("EMPLOYEE","ADMIN"));
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest()
-                .authenticated().and().formLogin().loginPage("/loginPage")
+        http.authorizeRequests().antMatchers("/").hasRole("EMPLOYEE")
+                .antMatchers("/leaders/**").hasRole("MANAGER")
+                .antMatchers("/systems/**").hasRole("ADMIN")
+                .and().formLogin().loginPage("/loginPage")
                 .loginProcessingUrl("/authUser").permitAll()
                 .and().logout()
                 .permitAll();
